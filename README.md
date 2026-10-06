@@ -16,9 +16,20 @@ The site is meant to be its own proof of engineering quality: a single static pa
 | TypeScript `strictest`, no `any` | `astro check` |
 | Strict CSP, HSTS, COOP, locked-down Permissions-Policy | `vercel.json` |
 | System font stacks only, light and dark via `prefers-color-scheme` | `src/styles/global.css` |
-| Lighthouse 100 across Performance, Accessibility, Best Practices, SEO (mobile) | checked locally before release |
+| Lighthouse 100 across Performance, Accessibility, Best Practices, SEO (mobile) | checked with `npx lighthouse` before release |
 
 `npm run verify` runs `astro check`, `astro build` and the budget script. CI runs the same command on every push to `main` and every pull request, so a change that adds a script tag, an external stylesheet or a heavy page cannot merge.
+
+## Current numbers
+
+Measured on production in October 2026.
+
+| Page | Raw | Gzip | Budget |
+| --- | --- | --- | --- |
+| `/` | 11.2 KB | 3.7 KB | 10 KB |
+| `/404` | 5.4 KB | 2.0 KB | 10 KB |
+
+Lighthouse (mobile) on `https://djmarkovic.com/`: Performance 100, Accessibility 100, Best Practices 100, SEO 100. The 404 page scores lower on SEO by design, because it is `noindex`.
 
 ## Stack
 
@@ -47,7 +58,9 @@ scripts/
   og.mjs                   renders public/og.png (1200x630) from SVG
 public/                    favicon.svg, robots.txt, og.png
 vercel.json                headers, redirects, clean URLs
-.github/workflows/ci.yml   npm ci + npm run verify
+.github/
+  workflows/ci.yml         npm ci + npm run verify
+  pull_request_template.md
 ```
 
 ## Development
@@ -62,6 +75,28 @@ npm run build    # static build to dist/
 npm run verify   # check + build + budget (what CI runs)
 npm run og       # regenerate public/og.png
 ```
+
+## Deployment
+
+Vercel's Git integration deploys the site:
+
+- every push to `main` deploys to production at `djmarkovic.com`
+- every pull request gets a preview deployment
+- `www.djmarkovic.com` permanently redirects to the apex, keeping the path
+
+`vercel.json` sets the security headers on every route. The CSP is `default-src 'none'` with only what a static page needs added back: inline styles, same-origin images, and `connect-src 'self'`. That last one exists because Lighthouse fetches `/robots.txt` from inside the page and would otherwise fail the SEO audit. `script-src` still falls back to `'none'`, so no code can run to use it.
+
+To run Lighthouse locally, start a preview with `npm run build && npx astro preview`, then:
+
+```bash
+npx lighthouse http://localhost:4321/ --form-factor=mobile --chrome-flags="--headless=new" --view
+```
+
+`astro preview` does not apply the headers from `vercel.json`. To check them, run Lighthouse against `https://djmarkovic.com/`.
+
+## Workflow
+
+Changes land through small pull requests, one concern each, with conventional commits. The PR template asks for what changed, why, and how it was verified. CI must pass before merge. See the [merged pull requests](https://github.com/djolex999/djmarkovic.com/pulls?q=is%3Apr+is%3Amerged) for examples.
 
 ## Adding a project
 
