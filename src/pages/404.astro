@@ -1,0 +1,12 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+---
+
+<Base title="Not found" description="This page does not exist." noindex>
+  <Header slot="header" />
+  <section class="section" aria-labelledby="nf">
+    <h2 id="nf" class="section-title">404</h2>
+    <p>Nothing lives at this address. <a href="/">Back to the front page</a>.</p>
+  </section>
+</Base>
