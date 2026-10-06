@@ -1,0 +1,78 @@
+---
+import "../styles/global.css";
+import { site } from "../config/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { title, description = site.description, noindex = false } = Astro.props;
+
+const fullTitle = title ? `${title} · ${site.name}` : `${site.name}, ${site.role}`;
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, "").replace(/\/index$/, "/"), site.url).href;
+const ogImage = new URL("/og.png", site.url).href;
+
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.name,
+  jobTitle: site.role,
+  url: site.url,
+  email: `mailto:${site.contact.email}`,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Belgrade",
+    addressCountry: "RS",
+  },
+  sameAs: [site.contact.github, site.contact.linkedin],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+
+    <meta name="theme-color" content="#fbfbfa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name}, ${site.role}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(personLd)} is:inline />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="wrap">
+      <slot name="header" />
+      <main id="main">
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <span>0 KB of JavaScript · system fonts · static HTML</span>
+        <a href={site.repo}>source ↗</a>
+      </footer>
+    </div>
+  </body>
+</html>
