@@ -1,3 +1,19 @@
+@font-face {
+  font-family: "DJM Text";
+  src: url("/fonts/djm-text-0.30/DJMText-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DJM Text";
+  src: url("/fonts/djm-text-0.30/DJMText-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light dark;
 
@@ -8,7 +24,7 @@
   --accent: #b93c0b;
   --panel: #f2f1ee;
 
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-body: "DJM Text", Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
   --measure: 680px;
@@ -48,7 +64,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: 17px;
   line-height: 1.6;
   overflow-wrap: break-word;
