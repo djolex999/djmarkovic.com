@@ -21,6 +21,8 @@ export interface SmallProject {
   readonly name: string;
   readonly summary: string;
   readonly stack: readonly string[];
+  /** When set, the project name links here. */
+  readonly href?: string;
 }
 
 export const featuredProjects: readonly FeaturedProject[] = [
@@ -65,8 +67,10 @@ export const smallProjects: readonly SmallProject[] = [
   },
   {
     name: "GrowthQ",
-    summary: "AI social media content for small businesses, generated from a per-brand profile.",
+    summary:
+      "co-founded; AI social media content for small businesses, generated from a per-brand profile. Selected for NTP Niš Launcher (7 of 108 teams), grant-funded.",
     stack: ["Node.js", "LLM + image models"],
+    href: "https://ntp.rs/en/aktuelnosti/5552/",
   },
   {
     name: "Fokus",
