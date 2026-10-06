@@ -32,7 +32,14 @@ import { featuredProjects, smallProjects } from "../data/projects";
       {
         smallProjects.map((project) => (
           <li>
-            <strong>{project.name}</strong>: {project.summary}{" "}
+            {project.href ? (
+              <a href={project.href}>
+                <strong>{project.name}</strong> ↗
+              </a>
+            ) : (
+              <strong>{project.name}</strong>
+            )}
+            : {project.summary}{" "}
             <span class="stack">{project.stack.join(" · ")}</span>
           </li>
         ))
