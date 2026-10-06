@@ -1,0 +1,104 @@
+---
+import type { FeaturedProject } from "../data/projects";
+
+interface Props {
+  project: FeaturedProject;
+}
+
+const { project } = Astro.props;
+const headingId = `project-${project.id}`;
+const hardPartId = `${headingId}-hard-part`;
+---
+
+<article class="project" aria-labelledby={headingId}>
+  <div class="head">
+    <h3 id={headingId}>{project.name}</h3>
+    <span class="kind mono muted">{project.kind}</span>
+  </div>
+
+  <p>{project.summary}</p>
+
+  {
+    project.hardPart && (
+      <aside class="hard-part" aria-labelledby={hardPartId}>
+        <p id={hardPartId} class="label">
+          The hard part
+        </p>
+        <p>{project.hardPart}</p>
+      </aside>
+    )
+  }
+
+  <p class="stack">{project.stack.join(" · ")}</p>
+
+  <ul class="list-plain links mono">
+    {
+      project.links.map((link) => (
+        <li>
+          <a href={link.href}>{link.kind} ↗</a>
+        </li>
+      ))
+    }
+    {project.note && <li class="muted">{project.note}</li>}
+  </ul>
+</article>
+
+<style>
+  .project {
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .project:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 650;
+  }
+
+  .hard-part {
+    margin: 0 0 1em;
+    padding: 14px 18px;
+    background: var(--panel);
+    border-left: 2px solid var(--accent);
+  }
+
+  .hard-part p:last-child {
+    margin: 0;
+  }
+
+  .label {
+    margin: 0 0 6px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .stack {
+    margin-bottom: 8px;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+  }
+
+  .links a {
+    display: inline-block;
+    padding: 2px 0;
+  }
+</style>

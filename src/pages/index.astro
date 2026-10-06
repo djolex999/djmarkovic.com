@@ -1,14 +1,48 @@
 ---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import ProjectEntry from "../components/ProjectEntry.astro";
+import { featuredProjects, smallProjects } from "../data/projects";
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Djordje Marković</title>
-  </head>
-  <body>
-    <p>Under construction.</p>
-  </body>
-</html>
+<Base>
+  <Header slot="header" />
+
+  <section class="section" aria-labelledby="about">
+    <h2 id="about" class="section-title">about</h2>
+    <p>
+      I build web products end to end, mostly in TypeScript (Next.js, Supabase) and Python. Most of
+      what I know I learned by putting things in front of real users and fixing what broke: payments,
+      prompts that drift, data I locked myself out of. I have a BSc in Computer Science, and I'm
+      looking for a full-stack or AI engineering team in Belgrade where I can work on harder problems
+      with people better than me.
+    </p>
+  </section>
+
+  <section class="section" aria-labelledby="work">
+    <h2 id="work" class="section-title">selected work</h2>
+    <div>
+      {featuredProjects.map((project) => <ProjectEntry project={project} />)}
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="also">
+    <h2 id="also" class="section-title">also built</h2>
+    <ul class="list-plain small">
+      {
+        smallProjects.map((project) => (
+          <li>
+            <strong>{project.name}</strong>: {project.summary}{" "}
+            <span class="stack">{project.stack.join(" · ")}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .small li + li {
+    margin-top: 12px;
+  }
+</style>
