@@ -4,7 +4,7 @@
 
 Personal site of Djordje Marković, full-stack and AI engineer in Belgrade. Live at [djmarkovic.com](https://djmarkovic.com).
 
-The site is meant to be its own proof of engineering quality: a single static page that ships no JavaScript, no web fonts and no external requests, with every constraint enforced in CI rather than by good intentions.
+The site is meant to be its own proof of engineering quality: a single static page that ships no JavaScript, one self-hosted font and no third-party requests, with every constraint enforced in CI rather than by good intentions.
 
 ## Constraints
 
@@ -15,7 +15,7 @@ The site is meant to be its own proof of engineering quality: a single static pa
 | Every HTML page under 10 KB gzipped | `scripts/budget.mjs` |
 | TypeScript `strictest`, no `any` | `astro check` |
 | Strict CSP, HSTS, COOP, locked-down Permissions-Policy | `vercel.json` |
-| System font stacks only, light and dark via `prefers-color-scheme` | `src/styles/global.css` |
+| One self-hosted font for body text (DJM Text, 2 styles, ~40 KB each); system mono for labels; light and dark via `prefers-color-scheme` | `src/styles/global.css`, CSP `font-src 'self'` |
 | Lighthouse 100 across Performance, Accessibility, Best Practices, SEO (mobile) | checked with `npx lighthouse` before release |
 
 `npm run verify` runs `astro check`, `astro build` and the budget script. CI runs the same command on every push to `main` and every pull request, so a change that adds a script tag, an external stylesheet or a heavy page cannot merge.
@@ -26,16 +26,17 @@ Measured on production in October 2026.
 
 | Page | Raw | Gzip | Budget |
 | --- | --- | --- | --- |
-| `/` | 11.2 KB | 3.7 KB | 10 KB |
+| `/` | 11.8 KB | 3.9 KB | 10 KB |
 | `/404` | 5.4 KB | 2.0 KB | 10 KB |
 
-Lighthouse (mobile) on `https://djmarkovic.com/`: Performance 100, Accessibility 100, Best Practices 100, SEO 100. The 404 page scores lower on SEO by design, because it is `noindex`.
+Total transfer for `/` is about 86 KB, almost all of it the two font files, which are cached for a year. Lighthouse (mobile): Performance 100, Accessibility 100, Best Practices 100, SEO 100. The 404 page scores lower on SEO by design, because it is `noindex`.
 
 ## Stack
 
 - [Astro](https://astro.build) 7, `output: "static"`, `build.format: "file"`, `trailingSlash: "never"`
 - TypeScript with `astro/tsconfigs/strictest`
 - `@astrojs/sitemap`
+- DJM Text for body text: [Libron](https://github.com/nicoverbruggen/libron) v0.30 subset to Latin + Latin Extended-A and renamed, self-hosted WOFF2 with `font-display: swap` and a preload
 - `sharp` (dev only) to render the Open Graph image
 - Hosted on Vercel, domain on Porkbun
 
@@ -56,7 +57,11 @@ src/
 scripts/
   budget.mjs               fails the build on JS, external CSS, executable scripts or pages > 10 KB gzip
   og.mjs                   renders public/og.png (1200x630) from SVG
-public/                    favicon.svg, robots.txt, og.png
+  icons.mjs                renders favicon.svg and apple-touch-icon.png from one source
+  fonts.py                 subsets and renames Libron into DJM Text
+fonts/libron-0.30/         unmodified Libron source files + OFL (not served)
+public/                    favicon.svg, apple-touch-icon.png, robots.txt, og.png
+  fonts/djm-text-0.30/     DJM Text WOFF2, OFL, notice of modifications
 vercel.json                headers, redirects, clean URLs
 .github/
   workflows/ci.yml         npm ci + npm run verify
@@ -74,6 +79,8 @@ npm run check    # type check
 npm run build    # static build to dist/
 npm run verify   # check + build + budget (what CI runs)
 npm run og       # regenerate public/og.png
+npm run icons    # regenerate favicon.svg and apple-touch-icon.png
+npm run fonts    # rebuild DJM Text (needs: pip install fonttools brotli)
 ```
 
 ## Deployment
@@ -116,4 +123,6 @@ The nav only renders the link when `site.cv` is set, so there is never a dead li
 
 ## License
 
-Code is MIT licensed. Written content and the OG image are © Djordje Marković. See [LICENSE](LICENSE).
+Code is MIT licensed. Written content, the OG image and the icon are © Djordje Marković. See [LICENSE](LICENSE).
+
+DJM Text is a modified version of Libron © Nico Verbruggen (based on Readerly and Newsreader), licensed under the [SIL Open Font License 1.1](public/fonts/djm-text-0.30/OFL.txt). Libron is a Reserved Font Name, so the subset ships under a different name. See [NOTICE.txt](public/fonts/djm-text-0.30/NOTICE.txt) for what was changed.
