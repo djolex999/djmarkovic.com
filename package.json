@@ -9,7 +9,8 @@
     "og": "node scripts/og.mjs",
     "icons": "node scripts/icons.mjs",
     "fonts": "python3 scripts/fonts.py",
-    "verify": "astro check && astro build && node scripts/budget.mjs"
+    "verify": "astro check && astro build && node scripts/budget.mjs",
+    "lighthouse": "node scripts/lighthouse.mjs"
   },
   "author": "Djordje Marković <djmarkovic999@gmail.com>",
   "license": "MIT",
@@ -20,6 +21,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "chrome-launcher": "^1.2.2",
+    "lighthouse": "^13.5.0",
     "sharp": "^0.35.5",
     "typescript": "^6.0.3"
   },
