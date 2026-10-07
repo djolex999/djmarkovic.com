@@ -1,11 +1,13 @@
 // Enforces the site's performance contract against the built output in dist/.
 // Fails on: any .js/.mjs file, any external stylesheet, any executable <script>,
-// or any HTML page over the gzip budget.
+// any HTML page over the gzip budget, or an og:image / twitter:image that does
+// not exist in dist/ (for example a post published without running npm run og).
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join, relative, extname } from "node:path";
 import { gzipSync } from "node:zlib";
 
 const DIST = new URL("../dist/", import.meta.url).pathname;
+const SITE_ORIGIN = "https://djmarkovic.com";
 const HTML_BUDGET_BYTES = 10 * 1024;
 const ALLOWED_SCRIPT_TYPES = new Set(["application/ld+json"]);
 
@@ -37,6 +39,25 @@ function stylesheetViolations(html) {
   for (const match of html.matchAll(/<link\b[^>]*>/gi)) {
     if (/\brel\s*=\s*["']?stylesheet/i.test(match[0])) {
       found.push(`external stylesheet ${match[0]}`);
+    }
+  }
+  return found;
+}
+
+async function missingSocialImages(html) {
+  const found = [];
+  const re = /<meta\b[^>]*(?:property|name)="(?:og:image|twitter:image)"[^>]*content="([^"]+)"/gi;
+  const urls = new Set([...html.matchAll(re)].map((m) => new URL(m[1], SITE_ORIGIN).href));
+  for (const href of urls) {
+    const url = new URL(href);
+    if (url.origin !== SITE_ORIGIN) {
+      found.push(`social image on another origin: ${url.href}`);
+      continue;
+    }
+    try {
+      await stat(join(DIST, decodeURIComponent(url.pathname)));
+    } catch {
+      found.push(`social image missing from dist: ${url.pathname} (run npm run og)`);
     }
   }
   return found;
@@ -75,7 +96,11 @@ async function main() {
     const gz = gzipSync(html, { level: 9 }).length;
     const over = gz > HTML_BUDGET_BYTES;
 
-    for (const v of [...scriptViolations(html), ...stylesheetViolations(html)]) {
+    for (const v of [
+      ...scriptViolations(html),
+      ...stylesheetViolations(html),
+      ...(await missingSocialImages(html)),
+    ]) {
       errors.push(`${rel}: ${v}`);
     }
     if (over) {
