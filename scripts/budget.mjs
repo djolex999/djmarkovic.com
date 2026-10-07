@@ -5,7 +5,7 @@
 // a page whose total weight (HTML plus every file it makes the browser
 // fetch: fonts, preloads, favicon, images) exceeds the page budget, or a post
 // whose OG card was rendered for a different title or date (stale card).
-import { readdir, readFile, stat } from "node:fs/promises";
+import { appendFile, readdir, readFile, stat } from "node:fs/promises";
 import { join, relative, extname } from "node:path";
 import { gzipSync } from "node:zlib";
 import { OG_SOURCE_KEYWORD, readText } from "./lib/png-text.mjs";
@@ -216,6 +216,20 @@ async function main() {
     `\nBudgets: HTML ${kb(HTML_BUDGET_BYTES)} gzip, total page weight ${kb(PAGE_BUDGET_BYTES)} (HTML gzip + fonts, preloads, favicon, images)\n`,
   );
   console.table(rows);
+
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    const lines = [
+      `### Page budget`,
+      "",
+      `HTML ≤ ${kb(HTML_BUDGET_BYTES)} gzip, total page weight ≤ ${kb(PAGE_BUDGET_BYTES)}.`,
+      "",
+      "| Page | HTML raw | HTML gzip | Total | Budget |",
+      "| --- | --- | --- | --- | --- |",
+      ...rows.map((r) => `| \`${r.page}\` | ${r.raw} | ${r.gzip} | ${r.total} | ${r.budget} |`),
+      "",
+    ];
+    await appendFile(process.env.GITHUB_STEP_SUMMARY, lines.join("\n"));
+  }
 
   if (rows.length === 0) {
     errors.push("no HTML pages found in dist/");
