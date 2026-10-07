@@ -17,9 +17,11 @@ The site is meant to be its own proof of engineering quality: a static site with
 | TypeScript `strictest`, no `any` | `astro check` |
 | Strict CSP, HSTS, COOP, locked-down Permissions-Policy | `vercel.json` |
 | One self-hosted font for body text (DJM Text, 2 styles, ~40 KB each); system mono for labels; light and dark via `prefers-color-scheme` | `src/styles/global.css`, CSP `font-src 'self'` |
-| Lighthouse 100 across Performance, Accessibility, Best Practices, SEO (mobile) | checked with `npx lighthouse` before release |
+| Lighthouse (mobile): Accessibility, Best Practices and SEO 100; Performance at least 95 on the median of 3 runs | `scripts/lighthouse.mjs`, a separate CI job |
 
-`npm run verify` runs `astro check`, `astro build` and the budget script. CI runs the same command on every push to `main` and every pull request, so a change that adds a script tag, an external stylesheet or a heavy page cannot merge.
+`npm run verify` runs `astro check`, `astro build` and the budget script. CI runs the same command on every push to `main` and every pull request, so a change that adds a script tag, an external stylesheet or a heavy page cannot merge. A second CI job runs `npm run lighthouse` against the same build and fails the PR if any score drops.
+
+Performance gets a 95 floor rather than 100 because CI machines are noisy. It scores 100 locally and on production. The 404 page is exempt from the SEO check, because it is `noindex` on purpose.
 
 ## Current numbers
 
@@ -66,6 +68,7 @@ src/
   styles/global.css        tokens, dark mode, focus styles, skip link
 scripts/
   budget.mjs               fails the build on JS, external CSS, executable scripts or pages > 10 KB gzip
+  lighthouse.mjs           serves dist/ with the vercel.json headers and enforces Lighthouse scores
   og.mjs                   renders public/og.png and one card per post (1200x630) from SVG
   icons.mjs                renders favicon.svg and apple-touch-icon.png from one source
   fonts.py                 subsets and renames Libron into DJM Text
@@ -89,6 +92,7 @@ npm run dev      # local dev server
 npm run check    # type check
 npm run build    # static build to dist/
 npm run verify   # check + build + budget (what CI runs)
+npm run lighthouse  # after a build: Lighthouse on every page, with production headers
 npm run og       # regenerate public/og.png and the per-post cards
 npm run icons    # regenerate favicon.svg and apple-touch-icon.png
 npm run fonts    # rebuild DJM Text (needs: pip install fonttools brotli)
@@ -104,13 +108,7 @@ Vercel's Git integration deploys the site:
 
 `vercel.json` sets the security headers on every route. The CSP is `default-src 'none'` with only what a static page needs added back: inline styles, same-origin images, and `connect-src 'self'`. That last one exists because Lighthouse fetches `/robots.txt` from inside the page and would otherwise fail the SEO audit. `script-src` still falls back to `'none'`, so no code can run to use it.
 
-To run Lighthouse locally, start a preview with `npm run build && npx astro preview`, then:
-
-```bash
-npx lighthouse http://localhost:4321/ --form-factor=mobile --chrome-flags="--headless=new" --view
-```
-
-`astro preview` does not apply the headers from `vercel.json`. To check them, run Lighthouse against `https://djmarkovic.com/`.
+`npm run lighthouse` serves `dist/` with the headers from `vercel.json` (minus HSTS, since it is plain HTTP), so the CSP is part of the audit. It needs a local Chrome.
 
 ## Workflow
 
