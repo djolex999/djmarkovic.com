@@ -24,9 +24,12 @@ const fullTitle = title ? `${title} · ${site.name}` : `${site.name}, ${site.rol
 const canonical = new URL(Astro.url.pathname.replace(/\.html$/, "").replace(/\/index$/, "/"), site.url).href;
 const ogImage = new URL(image.src, site.url).href;
 
+const personId = `${site.url}/#person`;
+
 const personLd = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": personId,
   name: site.name,
   jobTitle: site.role,
   url: site.url,
@@ -38,6 +41,26 @@ const personLd = {
   },
   sameAs: [site.contact.github, site.contact.linkedin],
 };
+
+const postLd =
+  article && title
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: title,
+        description,
+        datePublished: article.published.toISOString(),
+        dateModified: (article.modified ?? article.published).toISOString(),
+        url: canonical,
+        mainEntityOfPage: canonical,
+        image: ogImage,
+        inLanguage: "en",
+        author: { "@type": "Person", "@id": personId, name: site.name, url: site.url },
+      }
+    : undefined;
+
+/** JSON for a <script> body: "<" is escaped so content can never close the tag. */
+const jsonLd = (data: object): string => JSON.stringify(data).replace(/</g, "\\u003c");
 ---
 
 <!doctype html>
@@ -75,7 +98,8 @@ const personLd = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <script type="application/ld+json" set:html={JSON.stringify(personLd)} is:inline />
+    <script type="application/ld+json" set:html={jsonLd(personLd)} is:inline />
+    {postLd && <script type="application/ld+json" set:html={jsonLd(postLd)} is:inline />}
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
