@@ -46,7 +46,7 @@ export const featuredProjects: readonly FeaturedProject[] = [
     name: "vir",
     kind: "open source · npm",
     summary:
-      "Turns Claude Code session transcripts into a local, plain-markdown knowledge base and serves it back to the agent mid-session over MCP, so past decisions get consulted instead of rediscovered.",
+      "Turns Claude Code and Codex session transcripts into a local, plain-markdown knowledge base and serves it back to the agent mid-session over MCP, so past decisions get consulted instead of rediscovered.",
     hardPart:
       "Keeping signal above noise without burning money. Of 1,386 transcripts on my machine, only 410 were worth a note. A heuristic pre-filter runs before any LLM call, Haiku classifies and drops anything at or below 0.6 confidence, and only survivors reach the expensive distill step, routed to Haiku or Sonnet by category and size. Stripping tool output cut one 517-call session from about 217k to 95k input tokens.",
     stack: ["TypeScript", "Node.js", "MCP", "Anthropic API", "Ollama"],
