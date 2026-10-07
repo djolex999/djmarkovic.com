@@ -1,6 +1,13 @@
 ---
 import { site } from "../config/site";
 
+interface Props {
+  /** The name is the page's h1 everywhere except pages with their own title, like posts. */
+  nameAs?: "h1" | "p";
+}
+
+const { nameAs: NameTag = "h1" } = Astro.props;
+
 interface NavLink {
   label: string;
   href: string;
@@ -19,7 +26,7 @@ if (site.cv !== null) {
 ---
 
 <header class="site-header">
-  <h1 class="name"><a href="/">{site.name}</a></h1>
+  <NameTag class="name"><a href="/">{site.name}</a></NameTag>
   <p class="role">
     {site.role} <span class="muted">· {site.location}</span>
   </p>
@@ -38,6 +45,7 @@ if (site.cv !== null) {
 
 <style>
   .name {
+    margin: 0;
     font-size: 1.75rem;
     font-weight: 700;
     letter-spacing: -0.01em;

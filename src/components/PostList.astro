@@ -1,0 +1,43 @@
+---
+import { isoDate, type Post } from "../lib/writing";
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+
+<ul class="list-plain posts">
+  {
+    posts.map((post) => (
+      <li>
+        <time class="date" datetime={isoDate(post.data.date)}>
+          {isoDate(post.data.date)}
+        </time>
+        <a href={`/writing/${post.id}`}>{post.data.title}</a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .posts li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 20px;
+  }
+
+  .posts li + li {
+    margin-top: 10px;
+  }
+
+  .date {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

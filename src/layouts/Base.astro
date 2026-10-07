@@ -6,9 +6,11 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  /** Set for posts: switches og:type to article and adds publish times. */
+  article?: { published: Date; modified?: Date | undefined };
 }
 
-const { title, description = site.description, noindex = false } = Astro.props;
+const { title, description = site.description, noindex = false, article } = Astro.props;
 
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name}, ${site.role}`;
 const canonical = new URL(Astro.url.pathname.replace(/\.html$/, "").replace(/\/index$/, "/"), site.url).href;
@@ -48,7 +50,9 @@ const personLd = {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? "article" : "website"} />
+    {article && <meta property="article:published_time" content={article.published.toISOString()} />}
+    {article?.modified && <meta property="article:modified_time" content={article.modified.toISOString()} />}
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
