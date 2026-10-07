@@ -7,11 +7,7 @@ import { getPosts } from "../../lib/writing";
 const posts = await getPosts();
 ---
 
-<Base
-  title="Writing"
-  description="Notes on building and shipping software, by Djordje Marković."
-  noindex={posts.length === 0}
->
+<Base title="Writing" description="Notes on building and shipping software, by Djordje Marković.">
   <Header slot="header" />
   <section class="section" aria-labelledby="writing">
     <h2 id="writing" class="section-title">writing</h2>
