@@ -20,7 +20,12 @@ const { Content } = await render(post);
 const minutes = readingMinutes(post.body ?? "");
 ---
 
-<Base title={title} description={description} article={{ published: date, modified: updated }}>
+<Base
+  title={title}
+  description={description}
+  article={{ published: date, modified: updated }}
+  image={{ src: `/og/writing/${post.id}.png`, alt: title }}
+>
   <Header slot="header" nameAs="p" />
   <article class="post" aria-labelledby="post-title">
     <p class="back"><a href="/writing">← writing</a></p>
