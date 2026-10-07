@@ -13,6 +13,7 @@ The site is meant to be its own proof of engineering quality: a static site with
 | Zero client JavaScript (the only `<script>` is JSON-LD) | `scripts/budget.mjs` |
 | No external stylesheets, CSS inlined at build | `build.inlineStylesheets: "always"` + budget script |
 | Every HTML page under 10 KB gzipped | `scripts/budget.mjs` |
+| Every page under 100 KB in total: HTML plus the fonts, preloads, favicon and images it loads | `scripts/budget.mjs` |
 | Every `og:image` / `twitter:image` exists in the build | `scripts/budget.mjs` |
 | TypeScript `strictest`, no `any` | `astro check` |
 | Strict CSP, HSTS, COOP, locked-down Permissions-Policy | `vercel.json` |
@@ -67,7 +68,7 @@ src/
     rss.xml.ts             RSS feed of published posts
   styles/global.css        tokens, dark mode, focus styles, skip link
 scripts/
-  budget.mjs               fails the build on JS, external CSS, executable scripts or pages > 10 KB gzip
+  budget.mjs               fails the build on JS, external CSS, executable scripts, pages > 10 KB gzip or > 100 KB total
   lighthouse.mjs           serves dist/ with the vercel.json headers and enforces Lighthouse scores
   og.mjs                   renders public/og.png and one card per post (1200x630) from SVG
   icons.mjs                renders favicon.svg and apple-touch-icon.png from one source
