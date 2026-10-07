@@ -7,9 +7,10 @@
 // Images are committed rather than rendered during the deploy build: SVG text
 // uses the fonts installed on the rendering machine, and the build image does
 // not guarantee any.
-import { mkdir, readdir, readFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, extname } from "node:path";
 import sharp from "sharp";
+import { OG_SOURCE_KEYWORD, withText } from "./lib/png-text.mjs";
 
 const PUBLIC = new URL("../public/", import.meta.url).pathname;
 const POSTS = new URL("../src/content/writing/", import.meta.url).pathname;
@@ -40,9 +41,11 @@ function card(body) {
 </svg>`;
 }
 
-async function render(svg, out) {
-  const info = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(out);
-  console.log(`og: ${out.replace(PUBLIC, "public/")} (${info.width}x${info.height}, ${(info.size / 1024).toFixed(1)} KB)`);
+async function render(svg, out, source) {
+  let png = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
+  if (source !== undefined) png = withText(png, OG_SOURCE_KEYWORD, source);
+  await writeFile(out, png);
+  console.log(`og: ${out.replace(PUBLIC, "public/")} (1200x630, ${(png.length / 1024).toFixed(1)} KB)`);
 }
 
 /** Rendered width in px of one line of bold sans text, measured with the same renderer. */
@@ -138,7 +141,7 @@ async function postCards() {
   <text x="${X}" y="150" font-family="${mono}" font-size="34" fill="${accent}">// writing</text>
   ${titleSvg}
   <text x="${X}" y="540" font-family="${mono}" font-size="32" fill="${muted}">Djordje Marković · ${escapeXml(post.date)}</text>`;
-    await render(card(body), `${outDir}${basename(file, ".md")}.png`);
+    await render(card(body), `${outDir}${basename(file, ".md")}.png`, `${post.title}\n${post.date}`);
   }
 }
 
