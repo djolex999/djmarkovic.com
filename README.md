@@ -4,7 +4,7 @@
 
 Personal site of Djordje Marković, full-stack and AI engineer in Belgrade. Live at [djmarkovic.com](https://djmarkovic.com).
 
-The site is meant to be its own proof of engineering quality: a single static page that ships no JavaScript, one self-hosted font and no third-party requests, with every constraint enforced in CI rather than by good intentions.
+The site is meant to be its own proof of engineering quality: a static site with a homepage and a small blog that ships no JavaScript, one self-hosted font and no third-party requests, with every constraint enforced in CI rather than by good intentions.
 
 ## Constraints
 
@@ -27,7 +27,8 @@ Measured on production in October 2026.
 | Page | Raw | Gzip | Budget |
 | --- | --- | --- | --- |
 | `/` | 11.8 KB | 3.9 KB | 10 KB |
-| `/404` | 5.4 KB | 2.0 KB | 10 KB |
+| `/404` | 5.9 KB | 2.2 KB | 10 KB |
+| `/writing` | 6.3 KB | 2.3 KB | 10 KB |
 
 Total transfer for `/` is about 86 KB, almost all of it the two font files, which are cached for a year. Lighthouse (mobile): Performance 100, Accessibility 100, Best Practices 100, SEO 100. The 404 page scores lower on SEO by design, because it is `noindex`.
 
@@ -35,7 +36,8 @@ Total transfer for `/` is about 86 KB, almost all of it the two font files, whic
 
 - [Astro](https://astro.build) 7, `output: "static"`, `build.format: "file"`, `trailingSlash: "never"`
 - TypeScript with `astro/tsconfigs/strictest`
-- `@astrojs/sitemap`
+- `@astrojs/sitemap` and `@astrojs/rss`
+- Content collections for posts, Shiki (built into Astro) for code highlighting at build time
 - DJM Text for body text: [Libron](https://github.com/nicoverbruggen/libron) v0.30 subset to Latin + Latin Extended-A and renamed, self-hosted WOFF2 with `font-display: swap` and a preload
 - `sharp` (dev only) to render the Open Graph image
 - Hosted on Vercel, domain on Porkbun
@@ -44,15 +46,22 @@ Total transfer for `/` is about 86 KB, almost all of it the two font files, whic
 
 ```
 src/
+  content.config.ts        writing collection schema
+  content/writing/         Markdown posts
+  lib/writing.ts           getPosts(), reading time, date formatting
   config/site.ts           identity, contact links, CV toggle
   data/projects.ts         FeaturedProject / SmallProject data
   layouts/Base.astro       <head>: meta, canonical, OG/Twitter, theme-color, JSON-LD Person
   components/
     Header.astro           name, role, contact nav
     ProjectEntry.astro     one featured project, optional "the hard part" panel
+    PostList.astro         date + title list, used on / and /writing
   pages/
     index.astro
     404.astro              noindex
+    writing/index.astro    all posts, newest first
+    writing/[slug].astro   one post: title, date, reading time, prose
+    rss.xml.ts             RSS feed of published posts
   styles/global.css        tokens, dark mode, focus styles, skip link
 scripts/
   budget.mjs               fails the build on JS, external CSS, executable scripts or pages > 10 KB gzip
@@ -104,6 +113,28 @@ npx lighthouse http://localhost:4321/ --form-factor=mobile --chrome-flags="--hea
 ## Workflow
 
 Changes land through small pull requests, one concern each, with conventional commits. The PR template asks for what changed, why, and how it was verified. CI must pass before merge. See the [merged pull requests](https://github.com/djolex999/djmarkovic.com/pulls?q=is%3Apr+is%3Amerged) for examples.
+
+## Writing a post
+
+Add a Markdown file to `src/content/writing/`. The filename becomes the URL: `hello-world.md` is served at `/writing/hello-world`.
+
+```markdown
+---
+title: Hello world
+description: One or two sentences. Used for the meta description, OG tags and RSS.
+date: 2026-10-07
+updated: 2026-10-09   # optional
+draft: true           # optional, defaults to false
+---
+
+Post body in Markdown. Fenced code blocks are highlighted at build time.
+```
+
+- Drafts show up in `npm run dev` but are left out of production builds, the RSS feed and the sitemap.
+- The homepage shows the latest 3 posts in a `// writing` section, and hides it when there are none.
+- `src/content/writing/style-test.md` is a permanent draft that exercises every prose and code style.
+
+Code blocks use Shiki's `github-light-high-contrast` and `github-dark-high-contrast` themes, switched by `prefers-color-scheme` through CSS variables. The regular GitHub themes fail WCAG AA contrast on comments.
 
 ## Adding a project
 
