@@ -31,7 +31,7 @@ Every CI run publishes them in its job summary, so they can't go stale:
 - **Page budget:** raw and gzipped HTML and total page weight for every page, from `scripts/budget.mjs`
 - **Lighthouse:** all four category scores for every page, from `scripts/lighthouse.mjs`
 
-See the [latest run on `main`](https://github.com/djolex999/djmarkovic.com/actions/workflows/ci.yml?query=branch%3Amain) and open its summary. Locally, `npm run verify` and `npm run lighthouse` print the same tables.
+See the [latest run on `main`](https://github.com/djolex999/djmarkovic.com/actions/workflows/ci.yml?query=branch%3Amain) and open its summary. GitHub only shows job summaries to signed-in users. Without an account, `npm run verify` and `npm run lighthouse` print the same tables locally.
 
 Roughly: pages are 2.5 to 5 KB of gzipped HTML and about 86 KB in total, almost all of it the two font files, which are cached for a year. Lighthouse is 100 across the board on every page except the SEO score of the `noindex` 404 page.
 
