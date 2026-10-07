@@ -26,15 +26,14 @@ Performance gets a 95 floor rather than 100 because CI machines are noisy. It sc
 
 ## Current numbers
 
-Measured on production in October 2026.
+Every CI run publishes them in its job summary, so they can't go stale:
 
-| Page | Raw | Gzip | Budget |
-| --- | --- | --- | --- |
-| `/` | 11.8 KB | 3.9 KB | 10 KB |
-| `/404` | 5.9 KB | 2.2 KB | 10 KB |
-| `/writing` | 6.3 KB | 2.3 KB | 10 KB |
+- **Page budget:** raw and gzipped HTML and total page weight for every page, from `scripts/budget.mjs`
+- **Lighthouse:** all four category scores for every page, from `scripts/lighthouse.mjs`
 
-Total transfer for `/` is about 86 KB, almost all of it the two font files, which are cached for a year. Lighthouse (mobile): Performance 100, Accessibility 100, Best Practices 100, SEO 100. The 404 page scores lower on SEO by design, because it is `noindex`.
+See the [latest run on `main`](https://github.com/djolex999/djmarkovic.com/actions/workflows/ci.yml?query=branch%3Amain) and open its summary. Locally, `npm run verify` and `npm run lighthouse` print the same tables.
+
+Roughly: pages are 2.5 to 5 KB of gzipped HTML and about 86 KB in total, almost all of it the two font files, which are cached for a year. Lighthouse is 100 across the board on every page except the SEO score of the `noindex` 404 page.
 
 ## Stack
 
