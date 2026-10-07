@@ -35,16 +35,20 @@ const latestPosts = (await getPosts()).slice(0, 3);
     <ul class="list-plain small">
       {
         smallProjects.map((project) => (
-          <li>
-            {project.href ? (
-              <a href={project.href}>
-                <strong>{project.name}</strong> ↗
-              </a>
-            ) : (
-              <strong>{project.name}</strong>
-            )}
-            : {project.summary}{" "}
-            <span class="stack">{project.stack.join(" · ")}</span>
+          <li class="small-item">
+            <span class="small-name">
+              {project.href ? (
+                <a href={project.href}>
+                  <strong>{project.name}</strong> ↗
+                </a>
+              ) : (
+                <strong>{project.name}</strong>
+              )}
+            </span>
+            <span class={`status status-${project.status}`}>{project.status}</span>{" "}
+            <span>
+              {project.summary} <span class="stack">{project.stack.join(" · ")}</span>
+            </span>
           </li>
         ))
       }
@@ -69,6 +73,43 @@ const latestPosts = (await getPosts()).slice(0, 3);
 <style>
   .small li + li {
     margin-top: 12px;
+  }
+
+  .small-name::after {
+    content: ":";
+  }
+
+  .status {
+    float: right;
+    margin-left: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: calc(17px * 1.6);
+  }
+
+  .status-shipped {
+    color: var(--muted);
+  }
+
+  .status-experiment {
+    color: var(--accent);
+  }
+
+  @media (max-width: 600px) {
+    .small-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .small-name::after {
+      content: none;
+    }
+
+    .status {
+      float: none;
+      margin: 0 0 2px;
+      line-height: 1.6;
+    }
   }
 
   .all-writing {
