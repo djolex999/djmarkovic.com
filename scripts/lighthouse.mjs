@@ -6,6 +6,11 @@
 //   Performance: >= 95 on the median of RUNS runs (CI machines are noisy)
 //
 // 404 is audited too, but not for SEO: it is noindex by design.
+//
+// The first audit after Chrome starts is unreliable on CI (a cold browser and
+// disk cache produced a performance score of 0 and a 94 on "/"), so one
+// throwaway warm-up audit runs first. A run that errors or returns no score is
+// retried rather than counted as 0, and reported with Lighthouse's own error.
 import { createServer } from "node:http";
 import { readdir, readFile, appendFile } from "node:fs/promises";
 import { extname, join } from "node:path";
@@ -15,6 +20,7 @@ import lighthouse from "lighthouse";
 const ROOT = new URL("../", import.meta.url).pathname;
 const DIST = join(ROOT, "dist");
 const RUNS = 3;
+const MAX_ATTEMPTS_PER_RUN = 3;
 const MIN = { performance: 0.95, accessibility: 1, "best-practices": 1, seo: 1 };
 const CATEGORIES = Object.keys(MIN);
 
@@ -70,6 +76,23 @@ async function pages() {
 
 const pct = (score) => Math.round(score * 100);
 
+/** One valid Lighthouse result, retrying runs that error or return null scores. */
+async function audit(url, port) {
+  const problems = [];
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS_PER_RUN; attempt++) {
+    const result = await lighthouse(url, { port, logLevel: "error", onlyCategories: CATEGORIES });
+    const lhr = result?.lhr;
+    const missing = lhr ? CATEGORIES.filter((key) => typeof lhr.categories[key]?.score !== "number") : CATEGORIES;
+    if (lhr && !lhr.runtimeError && missing.length === 0) return lhr;
+    const reason = lhr?.runtimeError
+      ? `${lhr.runtimeError.code}: ${lhr.runtimeError.message}`
+      : `no score for ${missing.join(", ")}`;
+    problems.push(`attempt ${attempt}: ${reason}`);
+    console.warn(`lighthouse: invalid run for ${url} (${reason}), retrying`);
+  }
+  throw new Error(`lighthouse: no valid run for ${url} after ${MAX_ATTEMPTS_PER_RUN} attempts\n  ${problems.join("\n  ")}`);
+}
+
 async function main() {
   const { server, origin } = await serve();
   const chrome = await chromeLauncher.launch({
@@ -79,16 +102,12 @@ async function main() {
   const failures = [];
 
   try {
+    await audit(`${origin}/`, chrome.port); // warm-up, discarded
+
     for (const path of await pages()) {
       const runs = [];
       for (let i = 0; i < RUNS; i++) {
-        const result = await lighthouse(`${origin}${path}`, {
-          port: chrome.port,
-          logLevel: "error",
-          onlyCategories: CATEGORIES,
-        });
-        if (!result) throw new Error(`lighthouse: no result for ${path}`);
-        runs.push(result.lhr);
+        runs.push(await audit(`${origin}${path}`, chrome.port));
       }
       runs.sort((a, b) => (a.categories.performance?.score ?? 0) - (b.categories.performance?.score ?? 0));
       const median = runs[Math.floor(runs.length / 2)];
