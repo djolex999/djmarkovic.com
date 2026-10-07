@@ -73,7 +73,7 @@ export const smallProjects: readonly SmallProject[] = [
   {
     name: "GrowthQ",
     summary:
-      "co-founded; AI social media content for small businesses, generated from a per-brand profile. Selected for NTP Niš Launcher (7 of 108 teams), grant-funded.",
+      "Co-founded. AI social media content for small businesses, generated from a per-brand profile. Selected for NTP Niš Launcher (7 of 108 teams), grant-funded.",
     stack: ["Node.js", "LLM + image models"],
     status: "shipped",
     href: "https://ntp.rs/en/aktuelnosti/5552/",
@@ -83,6 +83,7 @@ export const smallProjects: readonly SmallProject[] = [
     summary: "An always-on-top desktop focus widget with global-shortcut capture.",
     stack: ["Tauri", "SQLite"],
     status: "shipped",
+    href: "https://github.com/djolex999/fokus",
   },
   {
     name: "Serbian TTS pipeline",
