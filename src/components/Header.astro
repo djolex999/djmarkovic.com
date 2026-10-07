@@ -8,21 +8,19 @@ interface Props {
 
 const { nameAs: NameTag = "h1" } = Astro.props;
 
-interface NavLink {
-  label: string;
-  href: string;
-  external: boolean;
-}
+type NavItem =
+  | { kind: "link"; label: string; href: string; external: boolean }
+  | { kind: "reveal"; label: string; value: string };
 
-const nav: NavLink[] = [
-  { label: "writing", href: "/writing", external: false },
-  { label: "email", href: `mailto:${site.contact.email}`, external: false },
-  { label: "github", href: site.contact.github, external: true },
-  { label: "linkedin", href: site.contact.linkedin, external: true },
+const nav: NavItem[] = [
+  { kind: "link", label: "writing", href: "/writing", external: false },
+  { kind: "reveal", label: "email", value: site.contact.email },
+  { kind: "link", label: "github", href: site.contact.github, external: true },
+  { kind: "link", label: "linkedin", href: site.contact.linkedin, external: true },
 ];
 
 if (site.cv !== null) {
-  nav.push({ label: "cv", href: site.cv, external: false });
+  nav.push({ kind: "link", label: "cv", href: site.cv, external: false });
 }
 
 const currentPath = Astro.url.pathname.replace(/\.html$/, "");
@@ -36,11 +34,18 @@ const currentPath = Astro.url.pathname.replace(/\.html$/, "");
   <nav aria-label="Main">
     <ul class="list-plain nav">
       {
-        nav.map((link) => (
+        nav.map((item) => (
           <li>
-            <a href={link.href} aria-current={link.href === currentPath ? "page" : undefined}>
-              {link.external ? `${link.label} ↗` : link.label}
-            </a>
+            {item.kind === "reveal" ? (
+              <details class="reveal">
+                <summary>{item.label}</summary>
+                <span class="revealed">{item.value}</span>
+              </details>
+            ) : (
+              <a href={item.href} aria-current={item.href === currentPath ? "page" : undefined}>
+                {item.external ? `${item.label} ↗` : item.label}
+              </a>
+            )}
           </li>
         ))
       }
@@ -80,5 +85,51 @@ const currentPath = Astro.url.pathname.replace(/\.html$/, "");
 
   .nav a[aria-current="page"] {
     text-decoration-thickness: 2px;
+  }
+
+  /* email: a no-JS reveal instead of a mailto: link */
+  .reveal {
+    display: inline;
+  }
+
+  /* Lets the address sit inline next to the summary. display: contents drops
+     the box the browser hides closed content with, so hide it explicitly. */
+  .reveal::details-content {
+    display: contents;
+  }
+
+  .reveal:not([open]) .revealed {
+    display: none;
+  }
+
+  .reveal summary {
+    display: inline-block;
+    padding: 4px 0;
+    list-style: none;
+    cursor: pointer;
+    text-decoration-line: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .reveal summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .reveal summary::marker {
+    content: "";
+  }
+
+  .reveal summary:hover,
+  .reveal[open] summary {
+    text-decoration-thickness: 2px;
+  }
+
+  .revealed {
+    margin-left: 10px;
+    white-space: nowrap;
+    user-select: all;
+    -webkit-user-select: all;
   }
 </style>
