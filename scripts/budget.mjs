@@ -2,11 +2,13 @@
 // Fails on: any .js/.mjs file, any external stylesheet, any executable <script>,
 // any HTML page over the gzip budget, an og:image / twitter:image that does
 // not exist in dist/ (for example a post published without running npm run og),
-// or a page whose total weight (HTML plus every file it makes the browser
-// fetch: fonts, preloads, favicon, images) exceeds the page budget.
+// a page whose total weight (HTML plus every file it makes the browser
+// fetch: fonts, preloads, favicon, images) exceeds the page budget, or a post
+// whose OG card was rendered for a different title or date (stale card).
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join, relative, extname } from "node:path";
 import { gzipSync } from "node:zlib";
+import { OG_SOURCE_KEYWORD, readText } from "./lib/png-text.mjs";
 
 const DIST = new URL("../dist/", import.meta.url).pathname;
 const SITE_ORIGIN = "https://djmarkovic.com";
@@ -108,6 +110,47 @@ async function assetBytes(html) {
   return { bytes, missing };
 }
 
+const decodeEntities = (s) =>
+  s
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+
+const metaContent = (html, key) =>
+  new RegExp(`<meta\\b[^>]*(?:property|name)="${key}"[^>]*content="([^"]*)"`, "i").exec(html)?.[1];
+
+/**
+ * Per-post cards are stamped by scripts/og.mjs with "title\ndate". A mismatch
+ * with the built page means the post changed after its card was rendered.
+ */
+async function staleOgCard(html) {
+  const image = metaContent(html, "og:image");
+  if (!image) return [];
+  const { pathname } = new URL(image, SITE_ORIGIN);
+  if (!pathname.startsWith("/og/writing/")) return [];
+
+  const title = decodeEntities(metaContent(html, "og:image:alt") ?? "");
+  const date = (metaContent(html, "article:published_time") ?? "").slice(0, 10);
+  const expected = `${title}\n${date}`;
+
+  let stamp;
+  try {
+    stamp = readText(await readFile(join(DIST, decodeURIComponent(pathname))), OG_SOURCE_KEYWORD);
+  } catch {
+    return []; // a missing card is already reported by missingSocialImages
+  }
+  if (stamp === null) return [`social card ${pathname} has no source stamp (run npm run og)`];
+  if (stamp !== expected) {
+    return [
+      `social card ${pathname} is stale: rendered for ${JSON.stringify(stamp)}, page is ${JSON.stringify(expected)} (run npm run og)`,
+    ];
+  }
+  return [];
+}
+
 const kb = (bytes) => `${(bytes / 1024).toFixed(2)} KB`;
 
 async function main() {
@@ -148,6 +191,7 @@ async function main() {
       ...scriptViolations(html),
       ...stylesheetViolations(html),
       ...(await missingSocialImages(html)),
+      ...(await staleOgCard(html)),
       ...assets.missing,
     ]) {
       errors.push(`${rel}: ${v}`);
