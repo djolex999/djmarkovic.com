@@ -34,8 +34,8 @@ export const featuredProjects: readonly FeaturedProject[] = [
     name: "pripremi.rs",
     kind: "live SaaS",
     summary:
-      "Lesson plans for Serbian primary school teachers, generated in seconds. I built and run all of it: the generation pipeline, the API, Paddle subscriptions priced for the local market, and distribution through teacher communities.",
-    stack: ["React", "Express", "MongoDB", "Claude API", "Paddle"],
+      "Lesson plans for Serbian primary school teachers, generated in seconds. I built and run all of it: the generation pipeline, the API, local card payments through OTP Bank, and distribution through teacher communities.",
+    stack: ["React", "Express", "MongoDB", "Claude API", "OTP Bank"],
     links: [{ kind: "live", href: "https://pripremi.rs" }],
     note: "source private, happy to walk through it",
   },
