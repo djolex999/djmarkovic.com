@@ -1,0 +1,20 @@
+---
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import PostList from "../../components/PostList.astro";
+import { getPosts } from "../../lib/writing";
+
+const posts = await getPosts();
+---
+
+<Base
+  title="Writing"
+  description="Notes on building and shipping software, by Djordje Marković."
+  noindex={posts.length === 0}
+>
+  <Header slot="header" />
+  <section class="section" aria-labelledby="writing">
+    <h2 id="writing" class="section-title">writing</h2>
+    {posts.length > 0 ? <PostList posts={posts} /> : <p class="muted">Nothing published yet.</p>}
+  </section>
+</Base>
