@@ -24,6 +24,13 @@ if (site.cv !== null) {
 }
 
 const currentPath = Astro.url.pathname.replace(/\.html$/, "");
+
+/** "page" on the link's own page, "true" anywhere below it (e.g. /writing/<post>). */
+function current(href: string): "page" | "true" | undefined {
+  if (href === currentPath) return "page";
+  if (href.startsWith("/") && currentPath.startsWith(`${href}/`)) return "true";
+  return undefined;
+}
 ---
 
 <header class="site-header">
@@ -42,7 +49,7 @@ const currentPath = Astro.url.pathname.replace(/\.html$/, "");
                 <span class="revealed">{item.value}</span>
               </details>
             ) : (
-              <a href={item.href} aria-current={item.href === currentPath ? "page" : undefined}>
+              <a href={item.href} aria-current={current(item.href)}>
                 {item.external ? `${item.label} ↗` : item.label}
               </a>
             )}
@@ -83,7 +90,7 @@ const currentPath = Astro.url.pathname.replace(/\.html$/, "");
     padding: 4px 0;
   }
 
-  .nav a[aria-current="page"] {
+  .nav a[aria-current] {
     text-decoration-thickness: 2px;
   }
 
