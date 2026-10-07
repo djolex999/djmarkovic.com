@@ -14,7 +14,7 @@ The site is meant to be its own proof of engineering quality: a static site with
 | No external stylesheets, CSS inlined at build | `build.inlineStylesheets: "always"` + budget script |
 | Every HTML page under 10 KB gzipped | `scripts/budget.mjs` |
 | Every page under 100 KB in total: HTML plus the fonts, preloads, favicon and images it loads | `scripts/budget.mjs` |
-| Every `og:image` / `twitter:image` exists in the build | `scripts/budget.mjs` |
+| Every `og:image` / `twitter:image` exists in the build, and each post's card matches its current title and date | `scripts/budget.mjs` |
 | TypeScript `strictest`, no `any` | `astro check` |
 | Strict CSP, HSTS, COOP, locked-down Permissions-Policy | `vercel.json` |
 | One self-hosted font for body text (DJM Text, 2 styles, ~40 KB each); system mono for labels; light and dark via `prefers-color-scheme` | `src/styles/global.css`, CSP `font-src 'self'` |
@@ -71,6 +71,7 @@ scripts/
   budget.mjs               fails the build on JS, external CSS, executable scripts, pages > 10 KB gzip or > 100 KB total
   lighthouse.mjs           serves dist/ with the vercel.json headers and enforces Lighthouse scores
   og.mjs                   renders public/og.png and one card per post (1200x630) from SVG
+  lib/png-text.mjs         reads/writes the UTF-8 source stamp (iTXt) on post cards
   icons.mjs                renders favicon.svg and apple-touch-icon.png from one source
   fonts.py                 subsets and renames Libron into DJM Text
 fonts/libron-0.30/         unmodified Libron source files + OFL (not served)
@@ -132,7 +133,7 @@ Post body in Markdown. Fenced code blocks are highlighted at build time.
 ```
 
 - Drafts show up in `npm run dev` but are left out of production builds, the RSS feed and the sitemap.
-- Before publishing, run `npm run og` to render the post's social card into `public/og/writing/<slug>.png` and commit it. CI fails if a published post's card is missing. Re-run it if the title changes. Cards are rendered locally rather than in the deploy build, because SVG text depends on the fonts installed on the machine.
+- Before publishing, run `npm run og` to render the post's social card into `public/og/writing/<slug>.png` and commit it. CI fails if a published post's card is missing, or if it was rendered for a different title or date: each card is stamped with the `title` and `date` it was made from, and the budget check compares that stamp with the built page. Cards are rendered locally rather than in the deploy build, because SVG text depends on the fonts installed on the machine.
 - The homepage shows the latest 3 posts in a `// writing` section, and hides it when there are none.
 - `src/content/writing/style-test.md` is a permanent draft that exercises every prose and code style.
 
