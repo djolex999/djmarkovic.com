@@ -2,7 +2,11 @@
 import Base from "../layouts/Base.astro";
 import Header from "../components/Header.astro";
 import ProjectEntry from "../components/ProjectEntry.astro";
+import PostList from "../components/PostList.astro";
 import { featuredProjects, smallProjects } from "../data/projects";
+import { getPosts } from "../lib/writing";
+
+const latestPosts = (await getPosts()).slice(0, 3);
 ---
 
 <Base>
@@ -46,10 +50,30 @@ import { featuredProjects, smallProjects } from "../data/projects";
       }
     </ul>
   </section>
+
+  {
+    latestPosts.length > 0 && (
+      <section class="section" aria-labelledby="writing">
+        <h2 id="writing" class="section-title">
+          writing
+        </h2>
+        <PostList posts={latestPosts} />
+        <p class="all-writing">
+          <a href="/writing">all writing</a>
+        </p>
+      </section>
+    )
+  }
 </Base>
 
 <style>
   .small li + li {
     margin-top: 12px;
+  }
+
+  .all-writing {
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
   }
 </style>
