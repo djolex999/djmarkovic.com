@@ -1,0 +1,156 @@
+---
+import type { GetStaticPaths } from "astro";
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import { getPosts, isoDate, readingMinutes, type Post } from "../../lib/writing";
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, date, updated } = post.data;
+const { Content } = await render(post);
+const minutes = readingMinutes(post.body ?? "");
+---
+
+<Base title={title} description={description} article={{ published: date, modified: updated }}>
+  <Header slot="header" nameAs="p" />
+  <article class="post" aria-labelledby="post-title">
+    <p class="back"><a href="/writing">← writing</a></p>
+    <h1 id="post-title" class="title">{title}</h1>
+    <p class="meta">
+      <time datetime={isoDate(date)}>{isoDate(date)}</time>
+      <span aria-hidden="true"> · </span>
+      <span>{minutes} min read</span>
+      {
+        updated && (
+          <>
+            <span aria-hidden="true"> · </span>
+            <span>
+              updated <time datetime={isoDate(updated)}>{isoDate(updated)}</time>
+            </span>
+          </>
+        )
+      }
+    </p>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .post {
+    margin-top: 56px;
+  }
+
+  .back,
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .back {
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 1.9rem;
+    letter-spacing: -0.01em;
+  }
+
+  .meta {
+    margin: 10px 0 36px;
+  }
+
+  .prose {
+    max-width: 65ch;
+  }
+
+  .prose :global(h2) {
+    font-size: 1.3rem;
+    margin: 2em 0 0.6em;
+  }
+
+  .prose :global(h3) {
+    font-size: 1.1rem;
+    margin: 1.6em 0 0.5em;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 1em;
+    padding-left: 1.4em;
+  }
+
+  .prose :global(li + li) {
+    margin-top: 0.3em;
+  }
+
+  .prose :global(li > ul),
+  .prose :global(li > ol) {
+    margin: 0.3em 0 0;
+  }
+
+  .prose :global(blockquote) {
+    margin: 1.4em 0;
+    padding: 2px 0 2px 18px;
+    border-left: 2px solid var(--line);
+    color: var(--muted);
+  }
+
+  .prose :global(hr) {
+    margin: 2.4em 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .prose :global(img) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .prose :global(:not(pre) > code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    padding: 1px 5px;
+    background: var(--panel);
+    border-radius: 3px;
+  }
+
+  .prose :global(pre) {
+    margin: 1.4em 0;
+    padding: 14px 16px;
+    overflow-x: auto;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.55;
+    tab-size: 2;
+  }
+
+  .prose :global(pre code) {
+    font-family: inherit;
+  }
+
+  .prose :global(.astro-code),
+  .prose :global(.astro-code span) {
+    color: var(--shiki-light);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .prose :global(.astro-code),
+    .prose :global(.astro-code span) {
+      color: var(--shiki-dark);
+    }
+  }
+</style>
