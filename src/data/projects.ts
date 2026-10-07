@@ -17,10 +17,13 @@ export interface FeaturedProject {
   readonly note?: string;
 }
 
+export type ProjectStatus = "shipped" | "experiment";
+
 export interface SmallProject {
   readonly name: string;
   readonly summary: string;
   readonly stack: readonly string[];
+  readonly status: ProjectStatus;
   /** When set, the project name links here. */
   readonly href?: string;
 }
@@ -58,29 +61,34 @@ export const smallProjects: readonly SmallProject[] = [
     name: "Sift",
     summary: "A Telegram bot that turns anything you send it into a searchable digest.",
     stack: ["Django", "Next.js"],
+    status: "experiment",
   },
   {
     name: "Novera",
     summary:
       "A node-based AI image studio; pipelines are drawn as graphs and run through a job queue.",
     stack: ["React Flow", "BullMQ"],
+    status: "experiment",
   },
   {
     name: "GrowthQ",
     summary:
       "co-founded; AI social media content for small businesses, generated from a per-brand profile. Selected for NTP Niš Launcher (7 of 108 teams), grant-funded.",
     stack: ["Node.js", "LLM + image models"],
+    status: "shipped",
     href: "https://ntp.rs/en/aktuelnosti/5552/",
   },
   {
     name: "Fokus",
     summary: "An always-on-top desktop focus widget with global-shortcut capture.",
     stack: ["Tauri", "SQLite"],
+    status: "shipped",
   },
   {
     name: "Serbian TTS pipeline",
     summary:
       "Transcription, LLM text cleanup, SSML markup and voice synthesis for long-form audio.",
     stack: ["Whisper", "Claude", "ElevenLabs"],
+    status: "shipped",
   },
 ];
