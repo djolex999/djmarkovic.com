@@ -34,7 +34,9 @@ export const featuredProjects: readonly FeaturedProject[] = [
     name: "pripremi.rs",
     kind: "live SaaS",
     summary:
-      "Lesson plans for Serbian primary school teachers, generated in seconds. I built and run all of it: the generation pipeline, the API, local card payments through OTP Bank, and distribution through teacher communities.",
+      "Lesson plans for Serbian primary school teachers, generated in seconds. I built and run all of it: the generation pipeline, the API, local card payments through OTP Bank (in final testing), and distribution through teacher communities.",
+    hardPart:
+      "Building card payments straight through a local bank, with no Stripe-style layer in between. The bank reports a payment through browser redirects and server callbacks, and the design assumes any of them can arrive late, twice or not at all. Every path settles through one exactly-once claim on the payment record, subscription writes are ordered by event time, and a job every 15 minutes settles anything the callbacks missed. Failure cases log named markers like STUCK PAYMENT and AMOUNT MISMATCH, so they're searchable instead of silent.",
     stack: ["React", "Express", "MongoDB", "Claude API", "OTP Bank"],
     links: [{ kind: "live", href: "https://pripremi.rs" }],
     note: "source private, happy to walk through it",
