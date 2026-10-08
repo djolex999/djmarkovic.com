@@ -6,8 +6,8 @@ export const site = {
   description:
     "Djordje Marković, full-stack and AI engineer in Belgrade. Shipped products, open-source LLM tooling, and notes on the hard parts.",
   repo: "https://github.com/djolex999/djmarkovic.com",
-  // Set to "/cv.pdf" once public/cv.pdf exists.
-  cv: null,
+  // null hides the nav link; the file lives at public/cv.pdf.
+  cv: "/cv.pdf",
   contact: {
     email: "djordje@djmarkovic.com",
     github: "https://github.com/djolex999",

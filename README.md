@@ -147,12 +147,12 @@ Add an entry to `featuredProjects` or `smallProjects` in `src/data/projects.ts`.
 
 Run `npm run verify` to confirm the page still fits the budget. If the featured projects change, update the bottom line in `scripts/og.mjs` and run `npm run og`.
 
-## Enabling the CV
+## The CV
 
-1. Add the file at `public/cv.pdf`.
-2. In `src/config/site.ts`, change `cv: null` to `cv: "/cv.pdf"`.
+The CV lives at `public/cv.pdf` and is linked from the nav as `cv`. It opens in the browser, and downloads save as `Djordje_Markovic_CV.pdf` (set in `vercel.json`).
 
-The nav only renders the link when `site.cv` is set, so there is never a dead link.
+- **To update it,** replace `public/cv.pdf` and open a PR. Keep the phone number off the public copy: the file is indexable.
+- **To hide it,** set `cv: null` in `src/config/site.ts`. The nav only renders the link when `site.cv` is set, so there is never a dead link.
 
 ## License
 
