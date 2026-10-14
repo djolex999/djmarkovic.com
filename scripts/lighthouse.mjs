@@ -49,6 +49,13 @@ async function serve() {
   const server = createServer(async (req, res) => {
     const path = new URL(req.url ?? "/", "http://localhost").pathname;
     const headers = Object.assign({}, ...rules.filter((r) => r.pattern.test(path)).map((r) => r.headers));
+    // Vercel serves its analytics script in production; dist/ does not have it.
+    // An empty stub keeps a 404 out of the console, which Best Practices penalizes.
+    if (path === "/_vercel/insights/script.js") {
+      res.writeHead(200, { ...headers, "Content-Type": "text/javascript; charset=utf-8" });
+      res.end("");
+      return;
+    }
     // Same resolution as Vercel cleanUrls: /writing -> writing.html, / -> index.html.
     const file = path === "/" ? "index.html" : extname(path) ? path.slice(1) : `${path.slice(1)}.html`;
     try {
