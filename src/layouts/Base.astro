@@ -100,6 +100,8 @@ const jsonLd = (data: object): string => JSON.stringify(data).replace(/</g, "\\u
 
     <script type="application/ld+json" set:html={jsonLd(personLd)} is:inline />
     {postLd && <script type="application/ld+json" set:html={jsonLd(postLd)} is:inline />}
+    {/* The site's only JavaScript: Vercel Web Analytics, served from this origin. */}
+    <script defer src="/_vercel/insights/script.js" is:inline></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -109,7 +111,7 @@ const jsonLd = (data: object): string => JSON.stringify(data).replace(/</g, "\\u
         <slot />
       </main>
       <footer class="site-footer">
-        <span>0 KB of JavaScript · one self-hosted font · static HTML</span>
+        <span>no JavaScript except analytics · one self-hosted font · static HTML</span>
         <a href={site.repo}>source ↗</a>
       </footer>
     </div>
