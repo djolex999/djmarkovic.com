@@ -9,7 +9,7 @@ export const site = {
   // null hides the nav link; the file lives at public/cv.pdf.
   cv: "/cv.pdf",
   contact: {
-    email: "djordje@djmarkovic.com",
+    email: "djmarkovic999@gmail.com",
     github: "https://github.com/djolex999",
     linkedin: "https://www.linkedin.com/in/djmarkovic",
   },
