@@ -4,13 +4,13 @@
 
 Personal site of Djordje Marković, full-stack and AI engineer in Belgrade. Live at [djmarkovic.com](https://djmarkovic.com).
 
-The site is meant to be its own proof of engineering quality: a static site with a homepage and a small blog that ships no JavaScript, one self-hosted font and no third-party requests, with every constraint enforced in CI rather than by good intentions.
+The site is meant to be its own proof of engineering quality: a static site with a homepage and a small blog that ships no JavaScript except one analytics script, one self-hosted font and no third-party requests, with every constraint enforced in CI rather than by good intentions.
 
 ## Constraints
 
 | Constraint | Enforced by |
 | --- | --- |
-| Zero client JavaScript (the only `<script>` is JSON-LD) | `scripts/budget.mjs` |
+| No client JavaScript except Vercel Web Analytics: one `<script defer src="/_vercel/insights/script.js">`, no inline code. Every other `<script>` must be JSON-LD | `scripts/budget.mjs` |
 | No external stylesheets, CSS inlined at build | `build.inlineStylesheets: "always"` + budget script |
 | Every HTML page under 10 KB gzipped | `scripts/budget.mjs` |
 | Every page under 100 KB in total: HTML plus the fonts, preloads, favicon and images it loads | `scripts/budget.mjs` |
@@ -44,6 +44,7 @@ Roughly: pages are 2.5 to 5 KB of gzipped HTML and about 86 KB in total, almost 
 - DJM Text for body text: [Libron](https://github.com/nicoverbruggen/libron) v0.30 subset to Latin + Latin Extended-A and renamed, self-hosted WOFF2 with `font-display: swap` and a preload
 - `sharp` (dev only) to render the Open Graph image
 - Hosted on Vercel, domain on Porkbun
+- Vercel Web Analytics, the site's only client JavaScript
 
 ## Structure
 
@@ -107,7 +108,13 @@ Vercel's Git integration deploys the site:
 - every pull request gets a preview deployment
 - `www.djmarkovic.com` permanently redirects to the apex, keeping the path
 
-`vercel.json` sets the security headers on every route. The CSP is `default-src 'none'` with only what a static page needs added back: inline styles, same-origin images, and `connect-src 'self'`. That last one exists because Lighthouse fetches `/robots.txt` from inside the page and would otherwise fail the SEO audit. `script-src` still falls back to `'none'`, so no code can run to use it.
+`vercel.json` sets the security headers on every route. The CSP is `default-src 'none'` with only what the site needs added back: inline styles, same-origin images and fonts, `script-src 'self'` and `connect-src 'self'`. `script-src 'self'` exists for one file, Vercel's analytics script, which Vercel serves from this origin. The budget check keeps it that way: `dist/` may not contain any `.js` file, and the analytics tag is the only executable `<script>` allowed, so no other code can run even though the CSP would accept same-origin scripts. `connect-src 'self'` lets the analytics script report page views to `/_vercel/insights`, and lets Lighthouse fetch `/robots.txt` from inside the page for its SEO audit.
+
+## Analytics
+
+Vercel Web Analytics is the site's one JavaScript exception, chosen over a no-script setup because it shows what readers actually open (posts, the CV) and where they come from. It is cookieless and runs on the site's own origin, so it adds no third-party request. Turn it on in the Vercel dashboard under the project's **Analytics** tab; until then `/_vercel/insights/script.js` returns 404.
+
+`npm run lighthouse` answers that path with an empty stub, because `dist/` doesn't contain the script and a 404 in the console would fail Best Practices.
 
 `npm run lighthouse` serves `dist/` with the headers from `vercel.json` (minus HSTS, since it is plain HTTP), so the CSP is part of the audit. It needs a local Chrome.
 

@@ -15,6 +15,9 @@ const SITE_ORIGIN = "https://djmarkovic.com";
 const HTML_BUDGET_BYTES = 10 * 1024;
 const PAGE_BUDGET_BYTES = 100 * 1024;
 const ALLOWED_SCRIPT_TYPES = new Set(["application/ld+json"]);
+// The one executable script the site allows: Vercel Web Analytics, served by
+// Vercel from the site's own origin (never part of dist/). Anything else fails.
+const ANALYTICS_SCRIPT_SRC = "/_vercel/insights/script.js";
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -29,13 +32,22 @@ async function walk(dir) {
 
 function scriptViolations(html) {
   const found = [];
-  for (const match of html.matchAll(/<script\b([^>]*)>/gi)) {
+  let analytics = 0;
+  for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
     const attrs = match[1] ?? "";
+    const body = (match[2] ?? "").trim();
     const type = /\btype\s*=\s*["']?([^"'\s>]+)/i.exec(attrs)?.[1]?.toLowerCase();
-    if (type === undefined || !ALLOWED_SCRIPT_TYPES.has(type)) {
-      found.push(`executable <script${attrs}>`);
+    if (type !== undefined && ALLOWED_SCRIPT_TYPES.has(type)) continue;
+
+    const src = /\bsrc\s*=\s*["']([^"']+)["']/i.exec(attrs)?.[1];
+    const isAnalytics = type === undefined && src === ANALYTICS_SCRIPT_SRC && body === "" && /\bdefer\b/i.test(attrs);
+    if (isAnalytics) {
+      analytics++;
+      continue;
     }
+    found.push(`executable <script${attrs}>`);
   }
+  if (analytics > 1) found.push(`analytics script included ${analytics} times`);
   return found;
 }
 
