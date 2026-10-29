@@ -1,4 +1,4 @@
-export type ProjectLinkKind = "live" | "npm" | "source";
+export type ProjectLinkKind = "live" | "npm" | "source" | "dataset";
 
 export interface ProjectLink {
   readonly kind: ProjectLinkKind;
@@ -54,6 +54,20 @@ export const featuredProjects: readonly FeaturedProject[] = [
       { kind: "live", href: "https://virwiki.dev" },
       { kind: "npm", href: "https://www.npmjs.com/package/@djolex999/vir-cli" },
       { kind: "source", href: "https://github.com/djolex999/vir" },
+    ],
+  },
+  {
+    id: "serbeval",
+    name: "serbeval",
+    kind: "open source · benchmark",
+    summary:
+      "A benchmark for how well language models handle Serbian: grammar, pravopis, the aorist, jat, č/ć and Cyrillic/Latin consistency, the things translated English tests can't check. Built on lm-evaluation-harness, with a leaderboard of 30 models.",
+    hardPart:
+      "Trusting the answer key. The first version had gold answers that contradicted their own explanations, so every changed answer was checked against the text of Pravopis 2010, and every spelling answer against its dictionary. Every gold error found so far sat where strong models disagreed, so those disagreements became the list to check by hand. Where the authorities themselves disagree, like foto-aparat and fotoaparat, both spellings count.",
+    stack: ["Python", "lm-evaluation-harness", "OpenRouter", "Hugging Face"],
+    links: [
+      { kind: "source", href: "https://github.com/djolex999/serbeval" },
+      { kind: "dataset", href: "https://huggingface.co/datasets/djolex999/serbeval" },
     ],
   },
 ];
