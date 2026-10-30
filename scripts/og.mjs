@@ -114,7 +114,7 @@ async function siteCard() {
   <text x="${X}" y="150" font-family="${mono}" font-size="34" fill="${accent}">// djmarkovic.com</text>
   <text x="${X}" y="300" font-family="${sans}" font-size="92" font-weight="700" fill="${text}">Djordje Marković</text>
   <text x="${X}" y="372" font-family="${sans}" font-size="40" fill="${muted}">Full-stack &amp; AI engineer · Belgrade</text>
-  <text x="${X}" y="540" font-family="${mono}" font-size="32" fill="${muted}">pripremi.rs · vir</text>`;
+  <text x="${X}" y="540" font-family="${mono}" font-size="32" fill="${muted}">pripremi.rs · vir · serbeval</text>`;
   await render(card(body), `${PUBLIC}og.png`);
 }
 
