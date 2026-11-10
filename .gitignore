@@ -8,3 +8,8 @@ dist/
 .DS_Store
 *.log
 lighthouse-*.json
+
+# klin
+.klin/task.md
+.klin/tmp/
+!tasks/lessons.md
