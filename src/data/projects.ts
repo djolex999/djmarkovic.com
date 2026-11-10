@@ -1,4 +1,4 @@
-export type ProjectLinkKind = "live" | "npm" | "source" | "dataset";
+export type ProjectLinkKind = "live" | "npm" | "source" | "dataset" | "video";
 
 export interface ProjectLink {
   readonly kind: ProjectLinkKind;
@@ -40,6 +40,18 @@ export const featuredProjects: readonly FeaturedProject[] = [
     stack: ["React", "TypeScript", "Express", "MongoDB", "OpenAI", "Gemini", "OTP Bank"],
     links: [{ kind: "live", href: "https://pripremi.rs" }],
     note: "source private, happy to walk through it",
+  },
+  {
+    id: "fulcrum",
+    name: "Fulcrum",
+    kind: "2nd place, Adapty First Commit 2026",
+    summary:
+      "A guard layer that lets an AI agent work with Adapty A/B tests without being able to call a fake winner. The agent's only write path is a TypeScript MCP server that checks every action against a policy, a sequential stopping boundary and a human approval, and logs it to a ledger.",
+    stack: ["TypeScript", "MCP", "AI agents", "Testing"],
+    links: [
+      { kind: "source", href: "https://github.com/djolex999/fulcrum" },
+      { kind: "video", href: "https://www.youtube.com/watch?v=kvZbSLL6XP4" },
+    ],
   },
   {
     id: "vir",
