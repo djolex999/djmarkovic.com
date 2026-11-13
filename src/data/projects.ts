@@ -17,7 +17,7 @@ export interface FeaturedProject {
   readonly note?: string;
 }
 
-export type ProjectStatus = "shipped" | "experiment";
+export type ProjectStatus = "shipped" | "experiment" | "research";
 
 export interface SmallProject {
   readonly name: string;
@@ -114,5 +114,33 @@ export const smallProjects: readonly SmallProject[] = [
       "A photo-culling tool I'm building for The Next Angle, a photo and video studio I invest in. An offline Python CLI scores shots on faces, sharpness, exposure and bursts and writes Lightroom ratings as XMP sidecars.",
     stack: ["Python", "OpenCV", "ONNX Runtime"],
     status: "experiment",
+  },
+  {
+    name: "klin",
+    summary:
+      "Two Claude Code plugins: a task memory loop that keeps what an agent learned from slipping away at /clear, and model routing between Sonnet, Opus and Fable. I use it on two products; no benchmark yet.",
+    stack: ["Claude Code plugins", "Shell"],
+    status: "experiment",
+  },
+  {
+    name: "serbretrieval",
+    summary:
+      "A Serbian search benchmark that measures how results change when the same query is written in Cyrillic, Latin, or Latin without č, ć, š, ž and đ. The tooling and a first corpus of 7,009 passages are done; queries and grading come next.",
+    stack: ["Python"],
+    status: "experiment",
+  },
+  {
+    name: "TRAIN",
+    summary:
+      "An AI fitness and nutrition app: training and meal plans, a weekly check-in that adjusts calories from weight and logged meals, and web push reminders. Built and tested on test data, not launched.",
+    stack: ["Next.js", "Supabase", "Claude"],
+    status: "experiment",
+  },
+  {
+    name: "digital twin",
+    summary:
+      "In my free time I'm researching a digital twin: AI that knows how I work and asks me the questions I'd rather avoid, instead of giving advice. One part is a private chat app, another a small experiment where an agent questions me by written rules.",
+    stack: ["Next.js", "SQLite", "Claude API"],
+    status: "research",
   },
 ];
