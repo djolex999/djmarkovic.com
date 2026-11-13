@@ -3,6 +3,7 @@ title: "My first hackathon"
 description: "Fulcrum took 2nd place at First Commit, Adapty's first hackathon in Belgrade. It was my first hackathon too."
 date: 2026-11-13
 draft: false
+short: "At my first hackathon, Adapty's First Commit in Belgrade, I built Fulcrum: a guard that lets an AI agent work with A/B tests without stopping one on noise. A test stops only past a statistical boundary, on its declared metric, after a human approves. We took 2nd place."
 ---
 
 On 7 and 8 November I was at First Commit, Adapty's first hackathon, in Belgrade. It was my first hackathon.

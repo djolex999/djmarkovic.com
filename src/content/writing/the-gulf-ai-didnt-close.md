@@ -3,6 +3,7 @@ title: "The gulf AI didn't close"
 description: "AI made writing code almost free. It did nothing for the harder part: knowing whether the code is right."
 date: 2026-10-07
 draft: false
+short: "AI made writing code almost free, but knowing whether the code is right still takes me as long as it did. More code, cleaner-looking code and faster shipping all make that check easier to skip. So I read every diff, practise without the tools, and only feature what I can defend."
 ---
 
 A few years ago, the slow part of building software was getting the thing to exist. You knew roughly what you wanted, and then you spent days turning that intent into working code.

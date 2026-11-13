@@ -10,6 +10,8 @@ const writing = defineCollection({
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),
     draft: z.boolean().default(false),
+    /** Two or three sentences shown above the post as its short version. */
+    short: z.string().min(1).max(400).optional(),
   }),
 });
 

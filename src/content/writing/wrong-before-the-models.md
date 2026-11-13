@@ -3,6 +3,7 @@ title: "My benchmark was wrong before the models were"
 description: "I built serbeval to test how well language models handle Serbian. The first thing it caught was mistakes in my own answer key."
 date: 2026-10-29
 draft: false
+short: "I built serbeval to test how well language models handle Serbian, and the first mistakes it found were mine: a lopsided answer key and gold answers that contradicted themselves. So far every error in my key sat where strong models disagreed, so that disagreement is now the list I check by hand."
 ---
 
 One of the recommendations in my thesis was to check how well AI handles Serbian instead of assuming it matches English. [serbeval](https://github.com/djolex999/serbeval) is my small attempt at that: a benchmark for things translated English tests can't check, like the aorist, jat, č/ć and pravopis.

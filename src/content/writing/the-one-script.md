@@ -3,6 +3,7 @@ title: "The one script I said I wouldn't add"
 description: "This site was built with no JavaScript and no analytics. This week I added one analytics script, and changed the footer to say so."
 date: 2026-10-17
 draft: false
+short: "This site promised no JavaScript and no analytics. I added one small analytics script without cookies because I had no idea if anyone read it, kept CI blocking every other script, and changed the footer so it no longer says 0 KB."
 ---
 
 This site started with one rule: no JavaScript, no analytics. The footer said "0 KB of JavaScript," and CI failed any change that added a script.
