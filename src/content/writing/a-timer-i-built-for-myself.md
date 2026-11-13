@@ -3,6 +3,7 @@ title: "A timer I built for myself"
 description: "fokus is a small focus timer I made because I kept losing focus with too many tabs open. I still use it every day."
 date: 2026-11-03
 draft: false
+short: "I kept losing focus with too many tabs open, so I built fokus: a small timer that stays on top, with a shortcut to write a thought down and get straight back to work. No notifications, accounts or streaks. I still use it every day."
 ---
 
 I kept losing focus with too many tabs open. So in September I built [fokus](https://github.com/djolex999/fokus), a small timer for my own desk. You pick a task and 10, 25 or 50 minutes, and it counts down in a little window that stays on top of everything else.

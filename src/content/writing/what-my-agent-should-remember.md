@@ -3,6 +3,7 @@ title: "410 of 1,386: deciding what my coding agent should remember"
 description: "Most AI coding sessions aren't worth keeping. How vir filters 1,386 transcripts down to 410 notes without paying a model to read the noise."
 date: 2026-10-08
 draft: false
+short: "Most of my AI coding sessions aren't worth remembering: of 1,386 transcripts, vir turned 410 into notes. It filters cheapest first, so a model only reads what the free checks let through, and nothing reaches the agent's instructions until I've reviewed it."
 ---
 
 Claude Code deletes session transcripts after about 30 days. Every decision and every fixed gotcha goes with them, so next month the agent rediscovers the same fix.

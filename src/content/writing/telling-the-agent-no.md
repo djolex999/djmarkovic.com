@@ -3,6 +3,7 @@ title: "Telling the agent no"
 description: "A short note on Anthropic's post about rebuilding source control, and the one line from it I keep thinking about."
 date: 2026-10-15
 draft: false
+short: "Anthropic wrote that their engineers' job was often to tell Claude no. On this site an agent writes most of the code, automatic checks guard a few rules, and I decide what goes in. A check only helps if nothing goes around it, and some things, like whether a sentence is true, only I can catch."
 ---
 
 Anthropic wrote about [rebuilding their source control](https://www.anthropic.com/engineering/redesigning-source-control). Their merges went from about 2,500 a day to over 30,000 in a few months, and git couldn't keep up. It's a scale I'll probably never work at, and most of the post is beyond what I know.

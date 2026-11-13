@@ -15,7 +15,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, date, updated } = post.data;
+const { title, description, date, updated, short } = post.data;
 const { Content } = await render(post);
 const minutes = readingMinutes(post.body ?? "");
 ---
@@ -45,6 +45,16 @@ const minutes = readingMinutes(post.body ?? "");
         )
       }
     </p>
+    {
+      short && (
+        <aside class="short" aria-labelledby="short-label">
+          <p id="short-label" class="label">
+            Short version
+          </p>
+          <p>{short}</p>
+        </aside>
+      )
+    }
     <div class="prose">
       <Content />
     </div>
@@ -74,6 +84,27 @@ const minutes = readingMinutes(post.body ?? "");
 
   .meta {
     margin: 10px 0 36px;
+  }
+
+  .short {
+    max-width: 65ch;
+    margin: 0 0 32px;
+    padding: 14px 18px;
+    background: var(--panel);
+    border-left: 2px solid var(--accent);
+  }
+
+  .short p:last-child {
+    margin: 0;
+  }
+
+  .label {
+    margin: 0 0 6px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   .prose {

@@ -3,6 +3,7 @@ title: "What my thesis was about"
 description: "I finished my bachelor's thesis on user experience when AI is the main way you use a product. A short summary, and the part I'm least sure of."
 date: 2026-10-22
 draft: false
+short: "My bachelor's thesis asked what changes in user experience when AI is the main way you use a product. My answer: design moves toward intent, context and trust, and reliability comes from checking the model's output in code. The conclusions are reasoned, not measured; testing them with users is next."
 ---
 
 I finished my bachelor's thesis this month: *User Experience 3.0: Applying Artificial Intelligence on Web Platforms*. It's written in Serbian, and it's a review with one case study, not original research.
