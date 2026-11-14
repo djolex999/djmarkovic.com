@@ -1,8 +1,9 @@
 ---
 title: "Working on a shadow of myself"
 description: "Two small, private things I'm building around the same idea: an AI that is more honest with me than I am."
-date: 2026-11-13
-draft: true
+date: 2026-11-15
+draft: false
+short: "I'm building two small, private things around one idea: an AI version of me that is more honest with me than I am. One is a chat that answers as me, critically, and keeps notes about me that I can lock. The other is an experiment where an agent asks me one question when a rule fires. I don't know yet if either helps."
 ---
 
 Lately I've been working on two small, private things around the same idea: an AI version of me that is more honest with me than I am.
