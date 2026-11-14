@@ -3,7 +3,7 @@ title: "Mostly self-taught"
 description: "I studied computer science in North Mitrovica and learned most of what I know myself, from courses and internships."
 date: 2026-11-16
 draft: true
-short: "I've been thinking about where I learned what I know. Studying in North Mitrovica was quiet, with few people from the industry and few chances to show yourself, so I'm mostly self-taught, and I kept building, however small. At my first hackathon I felt like an outsider, and that was a motive for me."
+short: "Studying in North Mitrovica was quiet, with few people from the industry and few chances to show yourself, so I'm mostly self-taught, and I kept building, however small. At my first hackathon I felt like an outsider, and that was a motive for me."
 ---
 
 I've been thinking lately about where I learned what I know.
