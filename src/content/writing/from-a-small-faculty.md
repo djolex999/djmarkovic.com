@@ -12,9 +12,9 @@ Studying there was quiet. There wasn't much practice, and not many people from t
 
 The quiet had a downside, too. It could get monotonous, and sometimes it drained my will to work. I worked, but not as much as I could have.
 
-So I'm mostly self-taught. I learned from online courses, and from a few events that were a bit like small hackathons, but not quite. In 2022 I started a remote backend internship, building Node.js APIs where senior developers reviewed every pull request. A second backend role followed in 2023, in a Scrum team. Later I started building my own products: pripremi.rs, a lesson-plan generator for Serbian teachers, vir, an open-source tool for coding agents, and serbeval, a benchmark for how language models handle Serbian.
+I'm mostly self-taught. I learned from online courses, and from a few events that were a bit like small hackathons, but not quite. In 2022 I started a remote backend internship, building Node.js APIs where senior developers reviewed every pull request. A second backend role followed in 2023, in a Scrum team. Later I started building my own products: pripremi.rs, a lesson-plan generator for Serbian teachers, vir, an open-source tool for coding agents, and serbeval, a benchmark for how language models handle Serbian.
 
-Whenever I left home, even for a few days, I'd feel a pull to work more, with more energy. Since I moved to Belgrade, that has changed a lot.
+Whenever I left home, I'd feel a pull to work more, with more energy. Since I moved to Belgrade, that has changed a lot.
 
 This month I went to my first hackathon, Adapty's First Commit in Belgrade. Many of the teams were students from ETF and RAF. I felt like an outsider there, and that was what pushed me.
 
