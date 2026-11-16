@@ -39,7 +39,28 @@ const personLd = {
     addressLocality: "Belgrade",
     addressCountry: "RS",
   },
-  sameAs: [site.contact.github, site.contact.linkedin],
+  // Spellings people search for: with Đ, without diacritics, and in Cyrillic.
+  alternateName: ["Đorđe Marković", "Djordje Markovic", "Ђорђе Марковић"],
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Faculty of Natural Sciences, North Mitrovica",
+  },
+  knowsAbout: [
+    "TypeScript",
+    "React",
+    "Node.js",
+    "Python",
+    "LLM evaluation",
+    "AI agents",
+    "Model Context Protocol",
+  ],
+  award: "2nd place, Adapty First Commit hackathon (2026)",
+  sameAs: [
+    site.contact.github,
+    site.contact.linkedin,
+    "https://www.npmjs.com/~djolex999",
+    "https://huggingface.co/djolex999",
+  ],
 };
 
 const postLd =
