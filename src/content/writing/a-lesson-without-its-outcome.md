@@ -18,4 +18,4 @@ The paper also has an example worth knowing. A run without that memory inherited
 
 My lessons files are mostly the middle option: the problem and the fix. What's missing is the prediction and the evidence: "this should stop X", and later, whether X actually stopped.
 
-I haven't changed anything yet. Next time I add a rule, I'll try writing down what it should prevent.
+I haven't changed anything yet. Next I want to go through the paper more carefully and see what could turn into new additions to my own projects, starting with how my lessons are written down.
