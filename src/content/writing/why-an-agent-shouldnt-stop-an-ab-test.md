@@ -1,8 +1,8 @@
 ---
 title: "Why an agent shouldn't be able to stop an A/B test"
 description: "An agent that checks a test every hour will find a fake winner sooner or later. What Fulcrum does about it, on the hackathon's synthetic data."
-date: 2026-11-20
-draft: true
+date: 2026-11-21
+draft: false
 short: "If you check an A/B test every week for 15 weeks and stop the first time p < 0.05, you'll call a fake winner in more than 1 in 5 tests where nothing changed. An agent would check far more often. Fulcrum only lets it ask to stop a test past a boundary that keeps that near 5%, on the metric the test declared, and a human approves."
 ---
 
