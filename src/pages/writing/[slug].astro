@@ -154,6 +154,22 @@ const minutes = readingMinutes(post.body ?? "");
     height: auto;
   }
 
+  .prose :global(figure) {
+    margin: 1.6em 0;
+  }
+
+  .prose :global(figure img) {
+    display: block;
+    width: 100%;
+  }
+
+  .prose :global(figcaption) {
+    margin-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
   .prose :global(:not(pre) > code) {
     font-family: var(--font-mono);
     font-size: 0.85em;

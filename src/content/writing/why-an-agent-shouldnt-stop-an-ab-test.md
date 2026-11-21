@@ -20,6 +20,14 @@ Fulcrum doesn't use a flat 0.05. It uses an O'Brien-Fleming style boundary, a st
 
 On the hackathon's synthetic Lumen app, the replay shows why it matters. On 16 August the Settings paywall looked like a winner: p 0.045, z 2.00. It was the only look in that test where p went under 0.05. Fulcrum's boundary at that look was 3.32, so the stop was blocked. By the end the other arm was slightly ahead, and neither had won.
 
+<figure>
+  <picture>
+    <source srcset="/img/writing/fulcrum-peeking-dark.svg" media="(prefers-color-scheme: dark)" />
+    <img src="/img/writing/fulcrum-peeking-light.svg" width="760" height="400" alt="Settings test, weekly looks: on 16 August z reaches 2.00, past the naive 1.96 line (p 0.045) but under Fulcrum's boundary of 3.32. By the last look the other arm leads." />
+  </picture>
+  <figcaption>The Settings test, week by week, on the hackathon's synthetic data. Chart from the Fulcrum repo.</figcaption>
+</figure>
+
 It also works the other way. Onboarding was set up to measure 60-day revenue, and only users who installed at least 60 days earlier count, so at week 2 Fulcrum says "not yet". Week 9 is the first valid look, the boundary is crossed there (z 4.34 against 2.71), and the stop is allowed.
 
 ## Only the metric you declared
