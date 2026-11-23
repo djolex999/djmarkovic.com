@@ -2,7 +2,7 @@
 title: "73 pull requests for a personal site"
 description: "This site is almost seven weeks old and has had 73 pull requests, nine of them one line long. Why I work on it that way."
 date: 2026-11-23
-draft: true
+draft: false
 short: "This site is almost seven weeks old and has had 73 pull requests, nine of them one line long. It's more process than a personal site needs, and that's on purpose: the repo is public, and I want it to show how I work."
 ---
 
