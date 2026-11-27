@@ -1,8 +1,8 @@
 ---
 title: "My eval turned off my own feature"
 description: "vir shipped with MMR reranking on by default for almost five months. When I rebuilt its retrieval eval, it showed the default made search worse."
-date: 2026-11-26
-draft: true
+date: 2026-11-27
+draft: false
 short: "In May I made MMR reranking the default in vir's search. When I rebuilt vir's retrieval eval in October, it showed MMR made results worse with both embedding models, so it's off by default now. The same eval caught a second ranking choice of mine."
 ---
 
